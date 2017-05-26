@@ -1,0 +1,23 @@
+{
+  "cmd": "./build",
+  "name": "Build",
+  "sh": true,
+  "cwd": "{PROJECT_PATH}/bin",
+  "errorMatch": [
+    "(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+): error: (?<message>.+)",
+    "(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+): fatal error: (?<message>.+)",
+    "(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+): (?<message>undefined refference .+)"
+  ],
+  "warningMatch": [
+    "(?<file>[\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<col>\\d+): warning: (?<message>.+)"
+  ],
+  "keymap": "f5",
+  "targets": {
+    "Clean": {
+      "cmd": "./clean",
+      "sh": true,
+      "cwd": "{PROJECT_PATH}/bin",
+      "keymap": "f6"
+    }
+  }
+}

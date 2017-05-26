@@ -3,3 +3,4 @@
 subdir('example')
 subdir('visualisation')
 subdir('line')
+subdir('followers')

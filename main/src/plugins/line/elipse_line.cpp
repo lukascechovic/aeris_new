@@ -54,7 +54,6 @@ std::vector<Agent*> ElipseLine::spawn_line(const json &parameters)
 
   std::vector<Agent*> agents;
 
-  bool error = false;
   for (int i = 0; i < agent_count; i++)
   {
     ElipseLine *agent = new ElipseLine(i, agent_count, radius, speed, color);

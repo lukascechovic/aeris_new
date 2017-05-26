@@ -74,6 +74,11 @@
     {
       "interface_type": 5,
       "body": "sphere_1cm"
+    },
+    "follower":
+    {
+      "interface_type": 6,
+      "body": "sphere_1cm"
     }
   },
   "body_list":
@@ -99,6 +104,34 @@
   },
   "agent_group_list":
   {
+    "follower":
+      {
+      "dt": 100,
+      "njobs": 2,
+      "spawn":
+      [
+        {
+          "count": 1,
+          "plugin": "visualisation",
+          "params":
+          {
+            "fullscreen": false,
+            "draw_grid": true,
+            "resolution": [1920, 1080],
+            "framerate": 30,
+            "border_width": 2.0
+          }
+        },
+        {
+          "count": 10,
+          "plugin": "follower",
+          "params":
+          {
+
+          }
+        }
+      ]
+      },
     "test":
     {
       "dt": 100,

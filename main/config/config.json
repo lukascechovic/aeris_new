@@ -46,6 +46,10 @@
     "testing":
     {
       "size": [50.9, 28.6]
+    },
+    "philips200wp":
+    {
+      "size": [43.3, 27.1]
     }
   },
   "agent_list":
@@ -106,7 +110,7 @@
   {
     "follower":
       {
-      "dt": 100,
+      "dt": 1000,
       "njobs": 2,
       "spawn":
       [
@@ -117,13 +121,13 @@
           {
             "fullscreen": false,
             "draw_grid": true,
-            "resolution": [1920, 1080],
+            "resolution": [1680, 1050],
             "framerate": 30,
             "border_width": 2.0
           }
         },
         {
-          "count": 10,
+          "count": 1,
           "plugin": "follower",
           "params":
           {

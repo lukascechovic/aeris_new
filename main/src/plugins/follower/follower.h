@@ -1,5 +1,5 @@
-#ifndef _EXAMPLE_AGENT_H_
-#define _EXAMPLE_AGENT_H_
+#ifndef _FOLLOWER_AGENT_H_
+#define _FOLLOWER_AGENT_H_
 
 #include <cstdint> // for integer types
 

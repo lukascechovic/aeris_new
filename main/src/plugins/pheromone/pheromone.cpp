@@ -4,10 +4,10 @@
 #include "common/timing.h" // pre ae::time::sleep_for, ae::time::milliseconds
 #include "common/logging.h" // pre LOG()
 
-#include "follower.h"
+#include "pheromone.h"
 
 
-FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
+PheromoneAgent::PheromoneAgent(const nlohmann::json &parameters) :
   Agent()
 {
   (void) parameters;
@@ -15,13 +15,17 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
   m_interface.position.y = (rand() % 20) - 10;
 
   m_interface.color = {0.0f, 1.0f, 0.0f};
+  // m_interface.value[0] = typ feromonu;
+  // m_interface.value[1] = intenzita;
+
+
 
   m_interface.timestamp = ae::time::timestamp();
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 }
 
 /** \brief Napíše do logu, že  bola zavolaná táto funkcia a čaká 5 ms. */
-void FollowerAgent::process(ae::Environment &env)
+void PheromoneAgent::process(ae::Environment &env)
 {
   (void)env;
 
@@ -53,8 +57,8 @@ void FollowerAgent::process(ae::Environment &env)
 }
 
 
-uint16_t FollowerAgent::assigned_type() const
+uint16_t PheromoneAgent::assigned_type() const
 {
   // plugin.cpp chcecks that this config entry exists
-  return ae::config::get["agent_list"]["follower"]["interface_type"];
+  return ae::config::get["agent_list"]["pheromone"]["interface_type"];
 }

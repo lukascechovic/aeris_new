@@ -3,4 +3,5 @@
 subdir('example')
 subdir('visualisation')
 subdir('line')
-subdir('followers')
+subdir('follower')
+subdir('pheromone')

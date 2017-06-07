@@ -4,7 +4,7 @@
 #include "common/logging.h"
 #include "common/plugin.h" // pre ae::plugin::plugin_t, ae::plugin::plugin_init, nlohmann::json, el::base::type::StoragePointer
 
-#include "follower.h"
+#include "pheromone.h"
 
 
 // mená, ktoré používame
@@ -17,27 +17,27 @@ using ae::plugin::plugin_init;
 
 
 // forward declarations for plugin functions
-extern "C" plugin_t* follower_load();
-int follower_init(plugin_init_t &init_data);
-std::vector<Agent*> follower_create(const json &parameters);
+extern "C" plugin_t* Pheromone_load();
+int Pheromone_init(plugin_init_t &init_data);
+std::vector<Agent*> Pheromone_create(const json &parameters);
 
 
 // štruktúra pluginu
-static plugin_t follower_plugin = {
-  follower_init, // or just ae::plugin::plugin_init
-  follower_create
+static plugin_t Pheromone_plugin = {
+  Pheromone_init, // or just ae::plugin::plugin_init
+  Pheromone_create
 };
 
 
 // plugin load function
-extern "C" plugin_t* follower_load()
+extern "C" plugin_t* Pheromone_load()
 {
-  return &follower_plugin;
+  return &Pheromone_plugin;
 }
 
 
 // Inicializuje plugin a vypíše správu do logu.
-int follower_init(plugin_init_t &init_data)
+int Pheromone_init(plugin_init_t &init_data)
 {
   // nastav globálne premenné
   plugin_init(init_data);
@@ -47,13 +47,13 @@ int follower_init(plugin_init_t &init_data)
   // napr môže skontrolovať, že konfiguračný súbor naozaj obsahuje položky pre
   // agentov ktorých tento plugin vytvára
   const auto &agent_list = config::get["agent_list"];
-  if (agent_list.find("follower") == agent_list.end())
+  if (agent_list.find("Pheromone") == agent_list.end())
   {
-    LOG(ERROR) << "Configuration is missing 'agent_list' entry for 'follower'";
+    LOG(ERROR) << "Configuration is missing 'agent_list' entry for 'Pheromone'";
     return -1;
   }
 
-  LOG(INFO) << "FollowerAgent plugin initialized.";
+  LOG(INFO) << "PheromoneAgent plugin initialized.";
 
   // vráť nulu pri úspešnej inicializácii
   return 0;
@@ -61,15 +61,15 @@ int follower_init(plugin_init_t &init_data)
 
 
 // Funkcia, ktorá vytvára agentov na základe predaných parametrov.
-std::vector<Agent*> follower_create(const json &parameters)
+std::vector<Agent*> Pheromone_create(const json &parameters)
 {
   std::vector<Agent*> arr;
 
-  FollowerAgent *agent = new FollowerAgent(parameters);
+  PheromoneAgent *agent = new PheromoneAgent(parameters);
   if (agent != nullptr)
   {
     arr.push_back(agent);
-    //env.add_agent(agent)
+    //env.add_agent(agent); //vyuzit pre feromon na pridavanie
     //nedeletovat spravovane env
   }
 

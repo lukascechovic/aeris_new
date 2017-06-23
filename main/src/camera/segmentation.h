@@ -14,6 +14,11 @@
 #include "common/logging.h"
 
 
+/** \addtogroup robot-tracking
+ *  @{
+ */
+
+
 class Segmentation
 {
 public:
@@ -24,7 +29,7 @@ public:
   static const int kMaxResponseThreshold = 4000;
 
   static const uint32_t kDefaultRobotSize = 26;
-  static const uint32_t kDefaultFastThreshold = 80;
+  static const uint32_t kDefaultFastThreshold = 70;
   static const int32_t kDefaultResponseThreshold = 1000;
   static const bool kDefaultBackgroundSubstraction = false;
 
@@ -37,12 +42,12 @@ public:
   const cv::Mat& get_playground_mask() const { return m_playground_mask; }
   const std::vector<cv::KeyPoint>& getKeypoints() const { return m_keypoints; }
   const std::vector<cv::Point3f>& getWeightedCentroids() const { return m_centroids; }
-  uint32_t getFastThreshold() const { return m_features->getThreshold(); }
+  uint32_t getFastThreshold() const { return m_fast_threshold; }
   float getResponseThreshold() const { return m_response_threshold; }
 
   void setPlaygroundCorners(const std::vector<cv::Point> &corners);
   void setRobotSize(uint32_t value) { m_robot_size = value; }
-  void setFastThreshold(int value) { m_features->setThreshold(value); }
+  void setFastThreshold(int value) { m_fast_threshold = value; }
   void setResponseThreshold(int value) { m_response_threshold = value; }
   void setBackgroundSubstraction(bool value) { m_background_sub = value; }
 
@@ -77,6 +82,9 @@ inline MAKE_LOGGABLE(cv::KeyPoint, kp, os)
   os << "([" << kp.pt.x << ", " << kp.pt.y << "], "<< kp.response << ")";
   return os;
 }
+
+
+/** @} */
 
 
 #endif /* _SEGMENTATION_H_ */

@@ -16,7 +16,10 @@ int main(int argc, char *argv[])
 
   try
   {
-    ae::config::setup("robot_tracking", argc, argv);
+    if (ae::config::setup("robot_tracking", argc, argv) < 0)
+    {
+      return 1;
+    }
   }
   catch (const std::exception &e)
   {

@@ -7,7 +7,7 @@ project(
 
 thread_dep = dependency('threads')
 
-add_global_arguments('-Wextra', '-Wpedantic', language : 'cpp')
+add_global_arguments('-Wextra', '-Wpedantic', '-Wno-expansion-to-defined', language : 'cpp')
 
 global_inc = include_directories('src')
 

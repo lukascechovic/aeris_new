@@ -8,6 +8,7 @@
 
 using namespace ae;
 
+//int argc, char *argv[] - parmetre prikazoveho riadka pri spustani programu
 int main(int argc, char *argv[])
 {
   if (ae::config::setup("agent-group", argc, argv) < 0)

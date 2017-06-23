@@ -11,8 +11,9 @@ class PheromoneAgent : public ae::Agent
   private:
 
   public:
-    PheromoneAgent(const nlohmann::json &parameters);
+    PheromoneAgent();
     PheromoneAgent(float x, float y);
+    PheromoneAgent(ae::sAgentPosition position);
     ~PheromoneAgent() {}
 
     void process(ae::Environment &env);

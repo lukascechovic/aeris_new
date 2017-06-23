@@ -84,6 +84,18 @@
       "interface_type": 6,
       "body": "sphere_1cm"
     }
+    ,
+    "pheromone":
+    {
+      "interface_type": 7,
+      "body": "sphere_1cm"
+    }
+    ,
+    "tracking":
+    {
+      "interface_type": 8,
+      "body": "sphere_1cm"
+    }
   },
   "body_list":
   {
@@ -129,6 +141,27 @@
         {
           "count": 1,
           "plugin": "follower",
+          "params":
+          {
+
+          }
+        }
+        ,
+        {
+          "count": 1,
+          "plugin": "tracking",
+          "params":
+          {
+            "max_pheromone": 10000,
+            "pheromone_params":
+            {
+              "diffusion": 2.5
+            }
+          }
+        },
+        {
+          "count": 1,
+          "plugin": "pheromone",
           "params":
           {
 

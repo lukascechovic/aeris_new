@@ -1,19 +1,22 @@
-#ifndef _PHEROMONE_AGENT_H_
-#define _PHEROMONE_AGENT_H_
+#ifndef _TRACKING_AGENT_H_
+#define _TRACKING_AGENT_H_
 
 #include <cstdint> // for integer types
 
 #include "common/agent.h" // for ae::Agent, ae::Environment
 #include "common/config.h" // for nlohmann::json
 
-class PheromoneAgent : public ae::Agent
+class TrackingAgent : public ae::Agent
 {
   private:
+    nlohmann::json m_params_for_pheromones;
 
   public:
-    PheromoneAgent(const nlohmann::json &parameters);
-    PheromoneAgent(float x, float y);
-    ~PheromoneAgent() {}
+    TrackingAgent(const nlohmann::json &parameters);
+    //TODO
+    //
+    //PheromoneAgent* Create(float x, float y);
+    ~TrackingAgent() {}
 
     void process(ae::Environment &env);
 

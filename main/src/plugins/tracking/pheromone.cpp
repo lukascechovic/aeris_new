@@ -4,17 +4,16 @@
 #include "common/timing.h" // pre ae::time::sleep_for, ae::time::milliseconds
 #include "common/logging.h" // pre LOG()
 
-#include "follower.h"
+#include "pheromone.h"
 
 
-FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
+PheromoneAgent::PheromoneAgent() :
   Agent()
 {
-  (void) parameters;
   m_interface.position.x = (rand() % 20) - 10;
   m_interface.position.y = (rand() % 20) - 10;
 
-  m_interface.color = {0.0f, 1.0f, 0.0f};
+  m_interface.color = {0.0f, 0.5f, 0.5f};
   // m_interface.value[0] = typ feromonu;
   // m_interface.value[1] = intenzita;
 
@@ -24,8 +23,42 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 }
 
+PheromoneAgent::PheromoneAgent(float x, float y) :
+  Agent()
+{
+  m_interface.position.x = x;
+  m_interface.position.y = y;
+  //m_interface.position.x = (rand() % 20) - 10;
+  //m_interface.position.y = (rand() % 20) - 10;
+
+  m_interface.color = {0.0f, 1.0f, 0.5f};
+  // m_interface.value[0] = typ feromonu;
+  // m_interface.value[1] = intenzita;
+  m_interface.timestamp = ae::time::timestamp();
+  //m_interface.type = ae::config::get["agent_list"]["pheromone"]["interface_type"];
+  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
+}
+
+PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
+  Agent()
+{
+  m_interface.position.x = position.x;
+  m_interface.position.y = position.y;
+  //m_interface.position.x = (rand() % 20) - 10;
+  //m_interface.position.y = (rand() % 20) - 10;
+
+  m_interface.color = {0.0f, 1.0f, 0.5f};
+  m_interface.type = 22;
+  // m_interface.value[0] = typ feromonu;
+  // m_interface.value[1] = intenzita;
+  m_interface.timestamp = ae::time::timestamp();
+  //m_interface.type = ae::config::get["agent_list"]["pheromone"]["interface_type"];
+  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
+}
+
+
 /** \brief Napíše do logu, že  bola zavolaná táto funkcia a čaká 5 ms. */
-void FollowerAgent::process(ae::Environment &env)
+void PheromoneAgent::process(ae::Environment &env)
 {
   (void)env;
 
@@ -36,8 +69,6 @@ void FollowerAgent::process(ae::Environment &env)
 
   //finalne premiestnit do statickej = sucastou triedy
   const uint16_t target_type = ae::config::get["agent_list"]["follower"]["interface_type"];
-
-
   //cyklus na prejdenie vsetkych agentov co su v systeme
   //m_interface je premenna typu sAgentInterface
   const auto &agent_list = env.global_state();
@@ -46,33 +77,21 @@ void FollowerAgent::process(ae::Environment &env)
    {
     /* code */
     //otestujem ci je agent typu real_robot_agent
-    ////TODO Lukas Dopisal
-    ////TODO Pozriet a vyuzit kontrolu ID laebo inych parametrov najdeneho robota
-    //if (agent.type == target_type && agent.id != m_interface.id)
     if (agent.type == target_type)
     {
-      //!!!!meni poziciu iba SEBE
-      //!!!!// m_interface sa vztahuje na "this" agenta
-      m_interface.position.x = (rand() % 20) - 10;
-      LOG(INFO) << "FollowerAgent Moved.";
-      //m_interface.position.y = (rand() % 20) - 10;
-      //FollowerAgent *agent = new FollowerAgent(parameters);
-      //env.add_agent (agent_to_add);
+//
+//
+//
+//
+//
     }
   }
 
 }
 
 
-uint16_t FollowerAgent::assigned_type() const
-{
-  // plugin.cpp chcecks that this config entry exists
-  return ae::config::get["agent_list"]["follower"]["interface_type"];
-}
-/*
 uint16_t PheromoneAgent::assigned_type() const
 {
   // plugin.cpp chcecks that this config entry exists
-  return ae::config::get["agent_list"]["follower"]["interface_type"];
+  return ae::config::get["agent_list"]["pheromone"]["interface_type"];
 }
-*/

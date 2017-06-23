@@ -53,9 +53,10 @@ void FollowerAgent::process(ae::Environment &env)
     {
       //!!!!meni poziciu iba SEBE
       //!!!!// m_interface sa vztahuje na "this" agenta
-      m_interface.position.x = (rand() % 20) - 10;
+      m_interface.position.x = (rand() % 36) - 18;
+      m_interface.position.y = (rand() % 20) - 10;
       LOG(INFO) << "FollowerAgent Moved.";
-      //m_interface.position.y = (rand() % 20) - 10;
+
       //FollowerAgent *agent = new FollowerAgent(parameters);
       //env.add_agent (agent_to_add);
     }

@@ -13,10 +13,11 @@ class TrackingAgent : public ae::Agent
 
   public:
     TrackingAgent(const nlohmann::json &parameters);
+    ~TrackingAgent() {}
+
     //TODO
     //
-    //PheromoneAgent* Create(float x, float y);
-    ~TrackingAgent() {}
+    void add_pheromone(ae::sAgentPosition position, ae::Environment &env);
 
     void process(ae::Environment &env);
 

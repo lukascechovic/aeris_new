@@ -1,4 +1,11 @@
 {
+  "pheromone":
+  {
+    "fade_speed": 0.05,
+    "rise_speed": 0.1,
+    "pheromone_grid_x": 36,
+    "pheromone_grid_y": 20
+  },
   "robot_tracking":
   {
     "debug": true,

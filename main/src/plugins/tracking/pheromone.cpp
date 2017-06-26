@@ -5,6 +5,7 @@
 #include "common/logging.h" // pre LOG()
 
 #include "pheromone.h"
+#include "tracking.h"
 
 
 PheromoneAgent::PheromoneAgent() :
@@ -54,6 +55,13 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   m_interface.timestamp = ae::time::timestamp();
   //m_interface.type = ae::config::get["agent_list"]["pheromone"]["interface_type"];
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(5));
+
+/*
+  //update grid pheromones ID and exist;
+  sPheromoneGridPosition value = agent_to_grid_position(position);
+  g_pheromone_grid[value.x][value.y].m_parameters.id = m_interface.id;
+  g_pheromone_grid[value.x][value.y].m_parameters.alive = true;
+*/
 }
 
 
@@ -93,9 +101,48 @@ void PheromoneAgent::process(ae::Environment &env)
 
 }
 
-
 uint16_t PheromoneAgent::assigned_type() const
 {
   // plugin.cpp chcecks that this config entry exists
   return ae::config::get["agent_list"]["pheromone"]["interface_type"];
+}
+/*
+sPheromoneGridPosition PheromoneAgent::agent_to_grid_position(ae::sAgentPosition position)
+{
+  sPheromoneGridPosition value;
+  PheromoneGridSize m_grid_size;
+
+  value.x = position.x + (m_grid_size.x / 2);
+  value.y = position.y + (m_grid_size.y / 2);
+
+  return value;
+}
+
+ae::sAgentPosition PheromoneAgent::grid_to_agent_position(sPheromoneGridPosition position)
+{
+  ae::sAgentPosition value;
+  PheromoneGridSize m_grid_size;
+
+  value.x = position.x - (m_grid_size.x / 2);
+  value.y = position.y - (m_grid_size.y / 2);
+
+  return value;
+}
+*/
+PheromoneParams::PheromoneParams()
+{
+  m_parameters.id = 0;
+  m_parameters.intensity = 0;
+  m_parameters.fade_speed = ae::config::get["pheromone"]["fade_speed"];
+  m_parameters.rise_speed = ae::config::get["pheromone"]["rise_speed"];
+  m_parameters.alive = false;
+}
+
+PheromoneGridSize::PheromoneGridSize()
+{
+  m_gridsize.x = ae::config::get["pheromone"]["pheromone_grid_x"];
+  x = ae::config::get["pheromone"]["pheromone_grid_x"];
+
+  m_gridsize.y = ae::config::get["pheromone"]["pheromone_grid_y"];
+  y = ae::config::get["pheromone"]["pheromone_grid_y"];
 }

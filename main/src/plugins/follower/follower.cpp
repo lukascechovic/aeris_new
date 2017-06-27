@@ -11,8 +11,14 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
   Agent()
 {
   (void) parameters;
-  m_interface.position.x = (rand() % 20) - 10;
-  m_interface.position.y = (rand() % 20) - 10;
+  //m_interface.position.x = (rand() % 20) - 10;
+  //m_interface.position.y = (rand() % 20) - 10;
+  //
+  int x = ae::config::get["pheromone"]["pheromone_grid_x"];
+  int y = ae::config::get["pheromone"]["pheromone_grid_y"];
+
+  m_interface.position.x = ceil( (rand() % x) - (x/2) );
+  m_interface.position.y = ceil( (rand() % y) - (y/2) );
 
   m_interface.color = {0.0f, 1.0f, 0.0f};
   // m_interface.value[0] = typ feromonu;
@@ -29,8 +35,13 @@ void FollowerAgent::process(ae::Environment &env)
 {
   (void)env;
 
+  int x = ae::config::get["pheromone"]["pheromone_grid_x"];
+  int y = ae::config::get["pheromone"]["pheromone_grid_y"];
 
-
+  m_interface.position.x = ceil( (rand() % x) - (x/2) );
+  m_interface.position.y = ceil( (rand() % y) - (y/2) );
+  //LOG(INFO) << "FollowerAgent Position: " << m_interface.position.x << " " <<m_interface.position.y;
+  //LOG(INFO) << "FollowerAgent Moved.";
   m_interface.timestamp = ae::time::timestamp();
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 
@@ -51,14 +62,7 @@ void FollowerAgent::process(ae::Environment &env)
     //if (agent.type == target_type && agent.id != m_interface.id)
     if (agent.type == target_type)
     {
-      //!!!!meni poziciu iba SEBE
-      //!!!!// m_interface sa vztahuje na "this" agenta
-      m_interface.position.x = (rand() % 36) - 18;
-      m_interface.position.y = (rand() % 20) - 10;
-      //LOG(INFO) << "FollowerAgent Moved.";
 
-      //FollowerAgent *agent = new FollowerAgent(parameters);
-      //env.add_agent (agent_to_add);
     }
   }
 

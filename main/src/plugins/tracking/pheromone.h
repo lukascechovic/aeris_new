@@ -9,15 +9,22 @@
 //CREATE ERRORS
 //#include "tracking.h"
 
+struct grid_postion
+{
+  uint64_t x;
+  uint64_t y;
+};
+
 class PheromoneAgent : public ae::Agent
 {
   private:
-
+    grid_postion m_grid_position;
   public:
     PheromoneAgent();
     PheromoneAgent(float x, float y);
     PheromoneAgent(ae::sAgentPosition position);
     ~PheromoneAgent() {}
+
 
     void process(ae::Environment &env);
 
@@ -39,6 +46,7 @@ struct sPheromoneParams
   float fade_speed;
   float rise_speed;
   bool alive;
+  float threshold;
 };
 
 struct sGridSize
@@ -73,8 +81,5 @@ class PheromoneParams //: public pheromonegrid
     ~PheromoneParams() {}
     sPheromoneParams m_parameters;
 };
-
-
-
 
 #endif /* _PHEROMONE_AGENT_H_ */

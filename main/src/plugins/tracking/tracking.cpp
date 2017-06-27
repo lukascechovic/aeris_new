@@ -55,17 +55,8 @@ void TrackingAgent::add_pheromone_agent (ae::sAgentPosition position, ae::Enviro
   }
   else
   {
-    //agents.push_back(agent);
-    LOG(INFO) << "PheromoneAgent Created. Number: ";// << agent_to_add.id;
+    //LOG(INFO) << "PheromoneAgent Created. Position: " << position.x << " " <<position.y;
     env.add_agent(agent_to_add);
-    //update grid pheromones ID and exist;
-    sPheromoneGridPosition value = agent_to_grid_position(position);
-    //TODO solve this problem with protected
-    //TODO move it to PheromoneAgent(sAgentInterface.position) constructor]
-    //TODO to save ID of created agent so we can easily kill it
-    //TODO when pheromone fall under trehold
-  //  g_pheromone_grid[value.x][value.y].m_parameters.id = agent_to_add.id;
-    g_pheromone_grid[value.x][value.y].m_parameters.alive = true;
   }
 }
 
@@ -76,7 +67,7 @@ void TrackingAgent::del_pheromone_agent(sPheromoneGridPosition position, ae::Env
   id = g_pheromone_grid[position.x][position.y].m_parameters.id;
 
   env.del_agent(id);
-  LOG(INFO) << "PheromoneAgent: deleted";
+//  LOG(INFO) << "PheromoneAgent: deleted";
   g_pheromone_grid[position.x][position.y].m_parameters.alive = false;
 }
 
@@ -95,9 +86,6 @@ void TrackingAgent::process(ae::Environment &env)
   //m_interface je premenna typu sAgentInterface
   const auto &agent_list = env.global_state();
   //cyklus ktory prejde vsetky prvky "for each"
-  //
-
-  //
   for (const ae::sAgentInterface &agent : agent_list)
    {
      //LOG(INFO) << "Searching.";
@@ -105,22 +93,29 @@ void TrackingAgent::process(ae::Environment &env)
     //otestujem ci je agent typu real_robot_agent
     if (agent.type == target_type)
     {
-      //zistim jeho poziciu
-      //
-      //vytvorim noveho agenta noveho typu feromon
-      //
-      //ae::sAgentPosition real_robot_agent_position;
-
-      add_pheromone_agent(agent.position, env);
-
+      //LOG(INFO) << "FollowerAgent Position Read: " << agent.position.x << " " <<agent.position.y;
+      //increase_pheromon on position of agent to track
       increase_pheromon(agent.position);
-        //TODO HANDLE AND KILL PHEROMONES
-        //TODO checking position
-        //TODO hold all active positions with intensity
-        //TODO maybe pheromone matrix
-        //TODO cycle to check active points and write them
+
+//***testing position conversion
+/*      //grid position
+      sPheromoneGridPosition grid_position;
+      //agent position
+      ae::sAgentPosition agent_position = agent.position;
+      std::cout << "1. x: " << agent.position.x << " y: " << agent.position.y << std::endl;
+      grid_position = agent_to_grid_position(agent.position);
+      std::cout << "2. x: " << grid_position.x << " y: " << grid_position.y << std::endl;
+      agent_position = grid_to_agent_position(grid_position);
+      std::cout << "3. x: " << agent_position.x << " y: " << agent_position.y << std::endl;
+*/
+//****
+
     }
   }
+  //decrease_pheromons on all grid positions
+  decrease_pheromons();
+  //kill and create PheromoneAgent's base on intensity in grid matrix
+  process_pheromones(env);
 
 }
 
@@ -139,24 +134,24 @@ void TrackingAgent::init_pheromone_grid()
   LOG(INFO) << "PheromoneGrid Allocated ";
 }
 
-sPheromoneGridPosition TrackingAgent::agent_to_grid_position(ae::sAgentPosition position)
+sPheromoneGridPosition agent_to_grid_position(ae::sAgentPosition position)
 {
   sPheromoneGridPosition value;
   PheromoneGridSize m_grid_size;
 
-  value.x = position.x + (m_grid_size.x / 2);
-  value.y = position.y + (m_grid_size.y / 2);
+  value.x = position.x + (m_grid_size.x / 2.0);
+  value.y = position.y + (m_grid_size.y / 2.0);
 
   return value;
 }
 
-ae::sAgentPosition TrackingAgent::grid_to_agent_position(sPheromoneGridPosition position)
+ae::sAgentPosition grid_to_agent_position(sPheromoneGridPosition position)
 {
   ae::sAgentPosition value;
   PheromoneGridSize m_grid_size;
 
-  value.x = position.x - (m_grid_size.x / 2);
-  value.y = position.y - (m_grid_size.y / 2);
+  value.x = (float)position.x - (m_grid_size.x / 2.0);
+  value.y = (float)position.y - (m_grid_size.y / 2.0);
 
   return value;
 }
@@ -165,6 +160,7 @@ void TrackingAgent::increase_pheromon(ae::sAgentPosition position)
 {
   sPheromoneGridPosition value;
   value = agent_to_grid_position(position);
+  //LOG(INFO) << "FollowerAgent Position Read: " << value.x << " " <<value.y;
   g_pheromone_grid[value.x][value.y].m_parameters.intensity += g_pheromone_grid[value.x][value.y].m_parameters.rise_speed;
   if (g_pheromone_grid[value.x][value.y].m_parameters.intensity > 1)
   {
@@ -172,13 +168,14 @@ void TrackingAgent::increase_pheromon(ae::sAgentPosition position)
   }
 }
 
-void TrackingAgent::decrease_pheromon()
+void TrackingAgent::decrease_pheromons()
 {
   for (size_t i = 0; i < g_pheromone_grid.size(); i++)
   {
     for (size_t j = 0; j < g_pheromone_grid[i].size(); j++)
     {
-      g_pheromone_grid[i][j].m_parameters.intensity -= g_pheromone_grid[i][j].m_parameters.fade_speed;
+      //TODO zmena charakteru vyparovania
+      g_pheromone_grid[i][j].m_parameters.intensity *= g_pheromone_grid[i][j].m_parameters.fade_speed;
       if (g_pheromone_grid[i][j].m_parameters.intensity <= 0)
       {
         g_pheromone_grid[i][j].m_parameters.intensity = 0;
@@ -187,15 +184,40 @@ void TrackingAgent::decrease_pheromon()
   }
 }
 
-void TrackingAgent::process_pheromones()
+void TrackingAgent::process_pheromones(ae::Environment &env)
 {
+  //grid position
+  sPheromoneGridPosition grid_position;
+  //agent position
+  ae::sAgentPosition agent_position;
+
   for (size_t i = 0; i < g_pheromone_grid.size(); i++)
   {
     for (size_t j = 0; j < g_pheromone_grid[i].size(); j++)
     {
-      //code
+      //delete PheromoneAgents if under threshold and alive
+      if ((g_pheromone_grid[i][j].m_parameters.intensity < g_pheromone_grid[i][j].m_parameters.threshold)
+      && (g_pheromone_grid[i][j].m_parameters.alive == true))
+      {
+        grid_position.x = i;
+        grid_position.y = j;
+        del_pheromone_agent(grid_position, env);
+      }
+      //create PheromoneAgents if meets threshold and not alive
+      if ((g_pheromone_grid[i][j].m_parameters.intensity >= g_pheromone_grid[i][j].m_parameters.threshold)
+      && (g_pheromone_grid[i][j].m_parameters.alive == false))
+      {
+        grid_position.x = i;
+        grid_position.y = j;
+        agent_position = grid_to_agent_position(grid_position);
+        add_pheromone_agent(agent_position, env);
+      }
+      //print matrix of intesity
+      //std::cout << " " << g_pheromone_grid[i][j].m_parameters.intensity;
     }
+    //std::cout << std::endl;
   }
+  //std::cout << std::endl;
 }
 
 uint16_t TrackingAgent::assigned_type() const

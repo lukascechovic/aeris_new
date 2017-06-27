@@ -7,6 +7,7 @@
 #include "pheromone.h"
 #include "tracking.h"
 
+extern std::vector<std::vector<PheromoneParams>> g_pheromone_grid;
 
 PheromoneAgent::PheromoneAgent() :
   Agent()
@@ -48,7 +49,10 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   //m_interface.position.x = (rand() % 20) - 10;
   //m_interface.position.y = (rand() % 20) - 10;
 
-  m_interface.color = {0.0f, 1.0f, 0.5f};
+  //m_interface.color = {0.0f, 1.0f, 0.5f};
+  m_interface.color.r = ae::config::get["pheromone"]["r"];
+  m_interface.color.g = ae::config::get["pheromone"]["g"];
+  m_interface.color.b = ae::config::get["pheromone"]["b"];
   m_interface.type = 22;
   // m_interface.value[0] = typ feromonu;
   // m_interface.value[1] = intenzita;
@@ -56,12 +60,14 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   //m_interface.type = ae::config::get["agent_list"]["pheromone"]["interface_type"];
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(5));
 
-/*
   //update grid pheromones ID and exist;
   sPheromoneGridPosition value = agent_to_grid_position(position);
   g_pheromone_grid[value.x][value.y].m_parameters.id = m_interface.id;
   g_pheromone_grid[value.x][value.y].m_parameters.alive = true;
-*/
+  //save grid position of this agent
+  m_grid_position.x = value.x;
+  m_grid_position.y = value.y;
+
 }
 
 
@@ -70,34 +76,24 @@ void PheromoneAgent::process(ae::Environment &env)
 {
   (void)env;
 
-  //5000000 = 5 seconds
-  //TODO rework
+/*
+  //old killing mechanism
   uint64_t pheromone_expires = 15000000;
   if ( (m_interface.timestamp+pheromone_expires) < ae::time::timestamp() )
   {
     env.del_agent(m_interface.id);
     LOG(INFO) << "PheromoneAgent: deleted";
   }
+*/
 
-  //std::cout << "time " << m_interface.timestamp << " : " << ae::time::timestamp() << std::endl;
-
-  //m_interface.timestamp = ae::time::timestamp();
-  //m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
-
-  //finalne premiestnit do statickej = sucastou triedy
-  const uint16_t target_type = ae::config::get["agent_list"]["follower"]["interface_type"];
-  //cyklus na prejdenie vsetkych agentov co su v systeme
-  //m_interface je premenna typu sAgentInterface, this na process agent
-  const auto &agent_list = env.global_state();
-  //cyklus ktory prejde vsetky prvky "for each"
-  for (const ae::sAgentInterface &agent : agent_list)
-   {
-    /* code */
-    if (agent.type == target_type)
-    {
-//
-    }
-  }
+  //SET UP DEFAULT COLOR
+  m_interface.color.r = ae::config::get["pheromone"]["r"];
+  m_interface.color.g = ae::config::get["pheromone"]["g"];
+  m_interface.color.b = ae::config::get["pheromone"]["b"];
+  //UPDATE INTENSITY
+  m_interface.color.r *= g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.intensity;
+  m_interface.color.g *= g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.intensity;
+  m_interface.color.b *= g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.intensity;
 
 }
 
@@ -136,6 +132,7 @@ PheromoneParams::PheromoneParams()
   m_parameters.fade_speed = ae::config::get["pheromone"]["fade_speed"];
   m_parameters.rise_speed = ae::config::get["pheromone"]["rise_speed"];
   m_parameters.alive = false;
+  m_parameters.threshold = ae::config::get["pheromone"]["threshold"];
 }
 
 PheromoneGridSize::PheromoneGridSize()

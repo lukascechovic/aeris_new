@@ -22,7 +22,7 @@ PheromoneAgent::PheromoneAgent() :
 
 
   m_interface.timestamp = ae::time::timestamp();
-  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(5));
+  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 }
 
 PheromoneAgent::PheromoneAgent(float x, float y) :
@@ -38,7 +38,7 @@ PheromoneAgent::PheromoneAgent(float x, float y) :
   // m_interface.value[1] = intenzita;
   m_interface.timestamp = ae::time::timestamp();
   //m_interface.type = ae::config::get["agent_list"]["pheromone"]["interface_type"];
-  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(5));
+  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 }
 
 PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
@@ -46,6 +46,7 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
 {
   m_interface.position.x = position.x;
   m_interface.position.y = position.y;
+  //m_interface.position.z = -5;
   //m_interface.position.x = (rand() % 20) - 10;
   //m_interface.position.y = (rand() % 20) - 10;
 
@@ -58,11 +59,21 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   // m_interface.value[1] = intenzita;
   m_interface.timestamp = ae::time::timestamp();
   //m_interface.type = ae::config::get["agent_list"]["pheromone"]["interface_type"];
-  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(5));
+  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 
   //update grid pheromones ID and exist;
   sPheromoneGridPosition value = agent_to_grid_position(position);
-  g_pheromone_grid[value.x][value.y].m_parameters.id = m_interface.id;
+  //TODO generating ID which can not be mistaken with other
+  //TODO causing error
+  //m_interface.id = value.x*100+value.y;
+  m_grid_position.x = value.x;
+  m_grid_position.y = value.y;
+  //m_interface.id is seted up after contructor ends by systeme
+  //so we are saving position coordinates with agent and then
+  //in PheromoneAgent.process pass agents id to g_pheromone_grid structure
+  //to have correct id on correct postion to be able kill PheromoneAgent's
+  //using ID
+  //g_pheromone_grid[value.x][value.y].m_parameters.id = m_interface.id;
   g_pheromone_grid[value.x][value.y].m_parameters.alive = true;
   //save grid position of this agent
   m_grid_position.x = value.x;
@@ -76,6 +87,11 @@ void PheromoneAgent::process(ae::Environment &env)
 {
   (void)env;
 
+  g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.id = m_interface.id;
+  //LOG(INFO) << "PheromoneAgent: Process, ID = " << m_interface.id;
+
+  m_interface.timestamp = ae::time::timestamp();
+  m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 /*
   //old killing mechanism
   uint64_t pheromone_expires = 15000000;

@@ -19,6 +19,7 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
 
   m_interface.position.x = ceil( (rand() % x) - (x/2) );
   m_interface.position.y = ceil( (rand() % y) - (y/2) );
+  //m_interface.position.z = -0.9;
 
   m_interface.color = {0.0f, 1.0f, 0.0f};
   // m_interface.value[0] = typ feromonu;

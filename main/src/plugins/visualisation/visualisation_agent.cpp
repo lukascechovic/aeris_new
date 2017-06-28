@@ -183,9 +183,12 @@ void VisualisationAgent::glut_thread_callback()
 
   glViewport(0, 0, m_resolution.x, m_resolution.y);
   glMatrixMode(GL_PROJECTION);
+  //glClearDepth(1.0);
   glEnable(GL_DEPTH_TEST);
+  //glDepthFunc(GL_LEQUAL);
   gluPerspective(45, (float) m_resolution.x / m_resolution.y, 0.1, 2000);
   glMatrixMode(GL_MODELVIEW);
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   if (m_fullscreen)
   {

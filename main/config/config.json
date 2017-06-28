@@ -5,9 +5,9 @@
     "rise_speed": 0.8,
     "pheromone_grid_x": 10,
     "pheromone_grid_y": 10,
-    "threshold": 0.09,
-    "r": 0.5,
-    "g": 0.2,
+    "threshold": 0.11,
+    "r": 0.2,
+    "g": 0.7,
     "b": 0.3
   },
   "robot_tracking":
@@ -99,7 +99,7 @@
     "pheromone":
     {
       "interface_type": 7,
-      "body": "sphere_1cm"
+      "body": "plane_1cm"
     }
     ,
     "tracking":
@@ -127,6 +127,12 @@
       "interface_type": 2,
       "model": "models/sphere.obj",
       "scale": 0.5
+    },
+    "plane_1cm":
+    {
+      "interface_type": 3,
+      "model": "models/plane.obj",
+      "scale": 1
     }
   },
   "agent_group_list":

@@ -46,6 +46,7 @@ TrackingAgent::TrackingAgent(const nlohmann::json &parameters) :
 
 void TrackingAgent::add_pheromone_agent (ae::sAgentPosition position, ae::Environment &env)
 {
+  
   //set position to tracked agent
   PheromoneAgent *agent_to_add = new PheromoneAgent(position);
 
@@ -60,6 +61,7 @@ void TrackingAgent::add_pheromone_agent (ae::sAgentPosition position, ae::Enviro
   }
 }
 
+//TODO not working because of wrong ID!!!!!!!
 void TrackingAgent::del_pheromone_agent(sPheromoneGridPosition position, ae::Environment &env)
 {
 
@@ -67,7 +69,7 @@ void TrackingAgent::del_pheromone_agent(sPheromoneGridPosition position, ae::Env
   id = g_pheromone_grid[position.x][position.y].m_parameters.id;
 
   env.del_agent(id);
-//  LOG(INFO) << "PheromoneAgent: deleted";
+  LOG(INFO) << "PheromoneAgent: deleted, ID = " << id;
   g_pheromone_grid[position.x][position.y].m_parameters.alive = false;
 }
 
@@ -176,9 +178,12 @@ void TrackingAgent::decrease_pheromons()
     {
       //TODO zmena charakteru vyparovania
       g_pheromone_grid[i][j].m_parameters.intensity *= g_pheromone_grid[i][j].m_parameters.fade_speed;
-      if (g_pheromone_grid[i][j].m_parameters.intensity <= 0)
+
+      if (g_pheromone_grid[i][j].m_parameters.intensity <= g_pheromone_grid[i][j].m_parameters.threshold)
       {
-        g_pheromone_grid[i][j].m_parameters.intensity = 0;
+        //TODO intensity of DEAD pheromon
+        //TODO to see if PheromoneAgent's are beeing killed properly
+        g_pheromone_grid[i][j].m_parameters.intensity = 0.1;
       }
     }
   }
@@ -213,7 +218,7 @@ void TrackingAgent::process_pheromones(ae::Environment &env)
         add_pheromone_agent(agent_position, env);
       }
       //print matrix of intesity
-      //std::cout << " " << g_pheromone_grid[i][j].m_parameters.intensity;
+      //std::cout << " "<< std::setprecision(1) << g_pheromone_grid[i][j].m_parameters.intensity;
     }
     //std::cout << std::endl;
   }

@@ -178,7 +178,7 @@ void VisualisationAgent::glut_thread_callback()
     glutInit(&argc, NULL);
   }
   glutInitWindowSize(m_resolution.x, m_resolution.y);
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
   m_window_handle = glutCreateWindow(m_window_name.c_str());
 
   glViewport(0, 0, m_resolution.x, m_resolution.y);

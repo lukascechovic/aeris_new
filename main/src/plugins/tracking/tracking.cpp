@@ -46,7 +46,7 @@ TrackingAgent::TrackingAgent(const nlohmann::json &parameters) :
 
 void TrackingAgent::add_pheromone_agent (ae::sAgentPosition position, ae::Environment &env)
 {
-  
+
   //set position to tracked agent
   PheromoneAgent *agent_to_add = new PheromoneAgent(position);
 
@@ -69,7 +69,7 @@ void TrackingAgent::del_pheromone_agent(sPheromoneGridPosition position, ae::Env
   id = g_pheromone_grid[position.x][position.y].m_parameters.id;
 
   env.del_agent(id);
-  LOG(INFO) << "PheromoneAgent: deleted, ID = " << id;
+  //LOG(INFO) << "PheromoneAgent: deleted, ID = " << id;
   g_pheromone_grid[position.x][position.y].m_parameters.alive = false;
 }
 
@@ -98,20 +98,6 @@ void TrackingAgent::process(ae::Environment &env)
       //LOG(INFO) << "FollowerAgent Position Read: " << agent.position.x << " " <<agent.position.y;
       //increase_pheromon on position of agent to track
       increase_pheromon(agent.position);
-
-//***testing position conversion
-/*      //grid position
-      sPheromoneGridPosition grid_position;
-      //agent position
-      ae::sAgentPosition agent_position = agent.position;
-      std::cout << "1. x: " << agent.position.x << " y: " << agent.position.y << std::endl;
-      grid_position = agent_to_grid_position(agent.position);
-      std::cout << "2. x: " << grid_position.x << " y: " << grid_position.y << std::endl;
-      agent_position = grid_to_agent_position(grid_position);
-      std::cout << "3. x: " << agent_position.x << " y: " << agent_position.y << std::endl;
-*/
-//****
-
     }
   }
   //decrease_pheromons on all grid positions
@@ -160,13 +146,33 @@ ae::sAgentPosition grid_to_agent_position(sPheromoneGridPosition position)
 
 void TrackingAgent::increase_pheromon(ae::sAgentPosition position)
 {
+  float rise_from = ae::config::get["pheromone"]["rise_from"];
   sPheromoneGridPosition value;
   value = agent_to_grid_position(position);
-  //LOG(INFO) << "FollowerAgent Position Read: " << value.x << " " <<value.y;
-  g_pheromone_grid[value.x][value.y].m_parameters.intensity += g_pheromone_grid[value.x][value.y].m_parameters.rise_speed;
-  if (g_pheromone_grid[value.x][value.y].m_parameters.intensity > 1)
+  //test Agent alive
+  //if dead set up intensity = rise_from
+  if (g_pheromone_grid[value.x][value.y].m_parameters.alive == false)
   {
-    g_pheromone_grid[value.x][value.y].m_parameters.intensity = 1;
+    //SETUP intensity on creation
+    g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
+  }
+  //if alive increase_pheromon by rise_speed
+  else
+  {
+    //pheromone is under rise_from so renew it
+    if (g_pheromone_grid[value.x][value.y].m_parameters.intensity < rise_from)
+    {
+      g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
+    }
+    //pheromone is over rise_from so add rise_speed
+    else
+    {
+      g_pheromone_grid[value.x][value.y].m_parameters.intensity += g_pheromone_grid[value.x][value.y].m_parameters.rise_speed;
+      if (g_pheromone_grid[value.x][value.y].m_parameters.intensity > 1)
+      {
+        g_pheromone_grid[value.x][value.y].m_parameters.intensity = 1;
+      }
+    }
   }
 }
 
@@ -176,14 +182,13 @@ void TrackingAgent::decrease_pheromons()
   {
     for (size_t j = 0; j < g_pheromone_grid[i].size(); j++)
     {
-      //TODO zmena charakteru vyparovania
+      //TODO zmena charakteru vyparovania z JSON?
       g_pheromone_grid[i][j].m_parameters.intensity *= g_pheromone_grid[i][j].m_parameters.fade_speed;
+      //g_pheromone_grid[i][j].m_parameters.intensity -= g_pheromone_grid[i][j].m_parameters.fade_speed;
 
       if (g_pheromone_grid[i][j].m_parameters.intensity <= g_pheromone_grid[i][j].m_parameters.threshold)
       {
-        //TODO intensity of DEAD pheromon
-        //TODO to see if PheromoneAgent's are beeing killed properly
-        g_pheromone_grid[i][j].m_parameters.intensity = 0.1;
+        g_pheromone_grid[i][j].m_parameters.intensity = 0.0;
       }
     }
   }
@@ -230,3 +235,16 @@ uint16_t TrackingAgent::assigned_type() const
   // plugin.cpp chcecks that this config entry exists
   return ae::config::get["agent_list"]["tracking"]["interface_type"];
 }
+
+//***testing position conversion
+/*      //grid position
+      sPheromoneGridPosition grid_position;
+      //agent position
+      ae::sAgentPosition agent_position = agent.position;
+      std::cout << "1. x: " << agent.position.x << " y: " << agent.position.y << std::endl;
+      grid_position = agent_to_grid_position(agent.position);
+      std::cout << "2. x: " << grid_position.x << " y: " << grid_position.y << std::endl;
+      agent_position = grid_to_agent_position(grid_position);
+      std::cout << "3. x: " << agent_position.x << " y: " << agent_position.y << std::endl;
+*/
+//****

@@ -45,6 +45,7 @@ struct sPheromoneParams
   float intensity;
   float fade_speed;
   float rise_speed;
+  float rise_from;
   bool alive;
   float threshold;
 };

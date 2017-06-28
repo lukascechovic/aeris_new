@@ -44,6 +44,11 @@ PheromoneAgent::PheromoneAgent(float x, float y) :
 PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   Agent()
 {
+  //TODO be able to chage body
+  //TODO atm BUG getting body from Other plugin of same class name
+  //TODO PheromoneAgent plugin
+  //m_interface.body = 1;
+
   m_interface.position.x = position.x;
   m_interface.position.y = position.y;
   //m_interface.position.z = -5;
@@ -51,9 +56,17 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   //m_interface.position.y = (rand() % 20) - 10;
 
   //m_interface.color = {0.0f, 1.0f, 0.5f};
+  //SET UP DEFAULT COLOR
+  //maximum color intensity
   m_interface.color.r = ae::config::get["pheromone"]["r"];
   m_interface.color.g = ae::config::get["pheromone"]["g"];
   m_interface.color.b = ae::config::get["pheromone"]["b"];
+  //starting color intensity
+  float rise_from = ae::config::get["pheromone"]["rise_from"];
+  m_interface.color.r *= rise_from;
+  m_interface.color.g *= rise_from;
+  m_interface.color.b *= rise_from;
+
   m_interface.type = 22;
   // m_interface.value[0] = typ feromonu;
   // m_interface.value[1] = intenzita;
@@ -63,11 +76,7 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
 
   //update grid pheromones ID and exist;
   sPheromoneGridPosition value = agent_to_grid_position(position);
-  //TODO generating ID which can not be mistaken with other
-  //TODO causing error
-  //m_interface.id = value.x*100+value.y;
-  m_grid_position.x = value.x;
-  m_grid_position.y = value.y;
+
   //m_interface.id is seted up after contructor ends by systeme
   //so we are saving position coordinates with agent and then
   //in PheromoneAgent.process pass agents id to g_pheromone_grid structure
@@ -78,9 +87,7 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   //save grid position of this agent
   m_grid_position.x = value.x;
   m_grid_position.y = value.y;
-
 }
-
 
 /** \brief Napíše do logu, že  bola zavolaná táto funkcia a čaká 5 ms. */
 void PheromoneAgent::process(ae::Environment &env)
@@ -103,10 +110,11 @@ void PheromoneAgent::process(ae::Environment &env)
 */
 
   //SET UP DEFAULT COLOR
+  //maximum color intensity
   m_interface.color.r = ae::config::get["pheromone"]["r"];
   m_interface.color.g = ae::config::get["pheromone"]["g"];
   m_interface.color.b = ae::config::get["pheromone"]["b"];
-  //UPDATE INTENSITY
+  //UPDATE actual INTENSITY
   m_interface.color.r *= g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.intensity;
   m_interface.color.g *= g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.intensity;
   m_interface.color.b *= g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.intensity;
@@ -118,29 +126,7 @@ uint16_t PheromoneAgent::assigned_type() const
   // plugin.cpp chcecks that this config entry exists
   return ae::config::get["agent_list"]["pheromone"]["interface_type"];
 }
-/*
-sPheromoneGridPosition PheromoneAgent::agent_to_grid_position(ae::sAgentPosition position)
-{
-  sPheromoneGridPosition value;
-  PheromoneGridSize m_grid_size;
 
-  value.x = position.x + (m_grid_size.x / 2);
-  value.y = position.y + (m_grid_size.y / 2);
-
-  return value;
-}
-
-ae::sAgentPosition PheromoneAgent::grid_to_agent_position(sPheromoneGridPosition position)
-{
-  ae::sAgentPosition value;
-  PheromoneGridSize m_grid_size;
-
-  value.x = position.x - (m_grid_size.x / 2);
-  value.y = position.y - (m_grid_size.y / 2);
-
-  return value;
-}
-*/
 PheromoneParams::PheromoneParams()
 {
   m_parameters.id = 0;

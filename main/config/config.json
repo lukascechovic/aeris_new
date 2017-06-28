@@ -2,9 +2,10 @@
   "pheromone":
   {
     "fade_speed": 0.9,
-    "rise_speed": 0.8,
-    "pheromone_grid_x": 10,
-    "pheromone_grid_y": 10,
+    "rise_speed": 0.1,
+    "rise_from": 0.5,
+    "pheromone_grid_x": 4,
+    "pheromone_grid_y": 4,
     "threshold": 0.11,
     "r": 0.2,
     "g": 0.7,
@@ -105,7 +106,7 @@
     "tracking":
     {
       "interface_type": 8,
-      "body": "sphere_1cm"
+      "body": "null"
     }
   },
   "body_list":
@@ -139,7 +140,7 @@
   {
     "follower":
       {
-      "dt": 1000,
+      "dt": 250,
       "njobs": 2,
       "spawn":
       [

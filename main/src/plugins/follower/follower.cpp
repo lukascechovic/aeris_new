@@ -39,8 +39,26 @@ void FollowerAgent::process(ae::Environment &env)
   int x = ae::config::get["pheromone"]["pheromone_grid_x"];
   int y = ae::config::get["pheromone"]["pheromone_grid_y"];
 
-  m_interface.position.x = ceil( (rand() % x) - (x/2) );
-  m_interface.position.y = ceil( (rand() % y) - (y/2) );
+  //Randomly jumping follower
+//  m_interface.position.x = ceil( (rand() % x) - (x/2) );
+//  m_interface.position.y = ceil( (rand() % y) - (y/2) );
+  //<-
+
+  //walking follower
+  int value = (rand() % 3) - 1 ;
+  value = m_interface.position.x + value;
+  if ((value > (-x/2))&&(value < (x/2)))
+  {
+    m_interface.position.x = value;
+  }
+  value = (rand() % 3) - 1 ;
+  value = m_interface.position.y + value;
+  if ((value > (-y/2))&&(value < (y/2)))
+  {
+    m_interface.position.y = value;
+  }
+  //<-
+
   //LOG(INFO) << "FollowerAgent Position: " << m_interface.position.x << " " <<m_interface.position.y;
   //LOG(INFO) << "FollowerAgent Moved.";
   m_interface.timestamp = ae::time::timestamp();

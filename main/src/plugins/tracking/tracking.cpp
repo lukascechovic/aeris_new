@@ -149,30 +149,40 @@ void TrackingAgent::increase_pheromon(ae::sAgentPosition position)
   float rise_from = ae::config::get["pheromone"]["rise_from"];
   sPheromoneGridPosition value;
   value = agent_to_grid_position(position);
-  //test Agent alive
-  //if dead set up intensity = rise_from
-  if (g_pheromone_grid[value.x][value.y].m_parameters.alive == false)
+  //TODO test if value is in range of grid
+  int grid_x_size = ae::config::get["pheromone"]["pheromone_grid_x"];
+  int grid_y_size = ae::config::get["pheromone"]["pheromone_grid_y"];
+  if (((value.x>=0)&&(value.x<grid_x_size))&&((value.y>=0)&&(value.y<grid_y_size)))
   {
-    //SETUP intensity on creation
-    g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
-  }
-  //if alive increase_pheromon by rise_speed
-  else
-  {
-    //pheromone is under rise_from so renew it
-    if (g_pheromone_grid[value.x][value.y].m_parameters.intensity < rise_from)
+    //test Agent alive
+    //if dead set up intensity = rise_from
+    if (g_pheromone_grid[value.x][value.y].m_parameters.alive == false)
     {
+      //SETUP intensity on creation
       g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
     }
-    //pheromone is over rise_from so add rise_speed
+    //if alive increase_pheromon by rise_speed
     else
     {
-      g_pheromone_grid[value.x][value.y].m_parameters.intensity += g_pheromone_grid[value.x][value.y].m_parameters.rise_speed;
-      if (g_pheromone_grid[value.x][value.y].m_parameters.intensity > 1)
+      //pheromone is under rise_from so renew it
+      if (g_pheromone_grid[value.x][value.y].m_parameters.intensity < rise_from)
       {
-        g_pheromone_grid[value.x][value.y].m_parameters.intensity = 1;
+        g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
+      }
+      //pheromone is over rise_from so add rise_speed
+      else
+      {
+        g_pheromone_grid[value.x][value.y].m_parameters.intensity += g_pheromone_grid[value.x][value.y].m_parameters.rise_speed;
+        if (g_pheromone_grid[value.x][value.y].m_parameters.intensity > 1)
+        {
+          g_pheromone_grid[value.x][value.y].m_parameters.intensity = 1;
+        }
       }
     }
+  }
+  else
+  {
+    LOG(INFO) << "TrackedAgent out of range of GRID";
   }
 }
 

@@ -1,11 +1,11 @@
 {
   "pheromone":
   {
-    "fade_speed": 0.9,
-    "rise_speed": 0.1,
+    "fade_speed": 0.98,
+    "rise_speed": 0.5,
     "rise_from": 0.5,
-    "pheromone_grid_x": 4,
-    "pheromone_grid_y": 4,
+    "pheromone_grid_x": 36,
+    "pheromone_grid_y": 20,
     "threshold": 0.11,
     "r": 0.2,
     "g": 0.7,
@@ -140,7 +140,7 @@
   {
     "follower":
       {
-      "dt": 250,
+      "dt": 100,
       "njobs": 2,
       "spawn":
       [
@@ -157,7 +157,7 @@
           }
         },
         {
-          "count": 1,
+          "count": 4,
           "plugin": "follower",
           "params":
           {

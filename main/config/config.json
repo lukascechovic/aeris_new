@@ -4,8 +4,8 @@
     "fade_speed": 0.98,
     "rise_speed": 0.2,
     "rise_from": 0.2,
-    "pheromone_grid_x": 36,
-    "pheromone_grid_y": 20,
+    "pheromone_grid_x": 38,
+    "pheromone_grid_y": 22,
     "threshold": 0.11,
     "r": 0.2,
     "g": 0.7,
@@ -158,7 +158,7 @@
           }
         },
         {
-          "count": 4,
+          "count": 0,
           "plugin": "follower",
           "params":
           {

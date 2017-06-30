@@ -82,7 +82,7 @@ void TrackingAgent::process(ae::Environment &env)
   //m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 
   //finalne premiestnit do statickej = sucastou triedy
-  const uint16_t target_type = ae::config::get["agent_list"]["follower"]["interface_type"];
+  const uint16_t target_type = ae::config::get["agent_list"]["real_robot_agent"]["interface_type"];
   //LOG(INFO) << "Target type: " << target_type;
   //cyklus na prejdenie vsetkych agentov co su v systeme
   //m_interface je premenna typu sAgentInterface

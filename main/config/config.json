@@ -2,14 +2,15 @@
   "pheromone":
   {
     "fade_speed": 0.98,
-    "rise_speed": 0.5,
-    "rise_from": 0.5,
+    "rise_speed": 0.2,
+    "rise_from": 0.2,
     "pheromone_grid_x": 36,
     "pheromone_grid_y": 20,
     "threshold": 0.11,
     "r": 0.2,
     "g": 0.7,
-    "b": 0.3
+    "b": 0.3,
+    "active_log_on": false
   },
   "robot_tracking":
   {

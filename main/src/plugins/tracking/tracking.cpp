@@ -164,10 +164,13 @@ void TrackingAgent::increase_pheromon(ae::sAgentPosition position)
     //if alive increase_pheromon by rise_speed
     else
     {
-      //pheromone is under rise_from so renew it
+      //pheromone is under rise_from so renew it on rise
       if (g_pheromone_grid[value.x][value.y].m_parameters.intensity < rise_from)
       {
-        g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
+        //renew to rise from if intensity is under rise_from
+        //g_pheromone_grid[value.x][value.y].m_parameters.intensity = rise_from;
+        //add rise_speed
+        g_pheromone_grid[value.x][value.y].m_parameters.intensity += g_pheromone_grid[value.x][value.y].m_parameters.rise_speed;
       }
       //pheromone is over rise_from so add rise_speed
       else
@@ -206,6 +209,8 @@ void TrackingAgent::decrease_pheromons()
 
 void TrackingAgent::process_pheromones(ae::Environment &env)
 {
+  //number or active pheromons from grid
+  int active_pheromone_value = 0;
   //grid position
   sPheromoneGridPosition grid_position;
   //agent position
@@ -215,6 +220,12 @@ void TrackingAgent::process_pheromones(ae::Environment &env)
   {
     for (size_t j = 0; j < g_pheromone_grid[i].size(); j++)
     {
+      //counts active pheromone grid positions if active_log_on == true
+      if ((ae::config::get["pheromone"]["active_log_on"] == true)
+        &&(g_pheromone_grid[i][j].m_parameters.alive == true))
+      {
+        active_pheromone_value++;
+      }
       //delete PheromoneAgents if under threshold and alive
       if ((g_pheromone_grid[i][j].m_parameters.intensity < g_pheromone_grid[i][j].m_parameters.threshold)
       && (g_pheromone_grid[i][j].m_parameters.alive == true))
@@ -238,6 +249,18 @@ void TrackingAgent::process_pheromones(ae::Environment &env)
     //std::cout << std::endl;
   }
   //std::cout << std::endl;
+
+  //prints active pheromone grid positions if active_log_on == true
+  if (ae::config::get["pheromone"]["active_log_on"] == true)
+  {
+    int total_positions, val;
+    val = ae::config::get["pheromone"]["pheromone_grid_x"];
+    total_positions = ae::config::get["pheromone"]["pheromone_grid_y"];
+    total_positions = total_positions * val;
+
+    LOG(INFO) << "Active " << active_pheromone_value << "/" << total_positions << " Grid Pheromons";
+  }
+  //->
 }
 
 uint16_t TrackingAgent::assigned_type() const

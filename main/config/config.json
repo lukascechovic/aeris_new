@@ -3,9 +3,9 @@
   {
     "fade_speed": 0.98,
     "rise_speed": 0.2,
-    "rise_from": 0.2,
-    "pheromone_grid_x": 38,
-    "pheromone_grid_y": 22,
+    "rise_from": 0.6,
+    "pheromone_grid_x": 48,
+    "pheromone_grid_y": 26,
     "threshold": 0.11,
     "r": 0.2,
     "g": 0.7,
@@ -63,6 +63,10 @@
     "philips200wp":
     {
       "size": [43.3, 27.1]
+    },
+    "dell_touch":
+    {
+      "size": [52.7, 29.6]
     }
   },
   "agent_list":
@@ -150,15 +154,15 @@
           "plugin": "visualisation",
           "params":
           {
-            "fullscreen": false,
+            "fullscreen": true,
             "draw_grid": true,
-            "resolution": [1680, 1050],
+            "resolution": [1920, 1080],
             "framerate": 30,
             "border_width": 2.0
           }
         },
         {
-          "count": 0,
+          "count": 10,
           "plugin": "follower",
           "params":
           {
@@ -171,15 +175,11 @@
           "plugin": "tracking",
           "params":
           {
-            "max_pheromone": 10000,
-            "pheromone_params":
-            {
-              "diffusion": 2.5
-            }
+
           }
         },
         {
-          "count": 1,
+          "count": 0,
           "plugin": "pheromone",
           "params":
           {

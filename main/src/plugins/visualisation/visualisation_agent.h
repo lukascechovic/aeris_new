@@ -30,6 +30,7 @@ class VisualisationAgent : public ae::Agent
 
 
   private:
+
     bool m_fullscreen;
     bool m_draw_grid;
     struct { int x, y; } m_resolution;
@@ -71,6 +72,11 @@ class VisualisationAgent : public ae::Agent
 
     bool remove_protection() const { return false; }
 
+    bool is_running()
+    {
+      return m_running;
+    }
+
   private:
     /** \brief Main render loop.
      *
@@ -86,6 +92,10 @@ class VisualisationAgent : public ae::Agent
 
     void make_grid(); /* TODO */
     void make_border(const float width);
+    
+    public:
+      void rendering();
+      void mouse_move_handler(int x, int y);
 };
 
 

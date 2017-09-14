@@ -1,3 +1,10 @@
+/*
+Follower is just agent with changing position
+It has nothing to do with following
+It is agent which could be tracked by tracking agent
+when there is no other thing to track
+ */
+
 #include "common/agent.h"  // pre ae::Agent, ae::Environment
 #include "common/agent_body.h"  // pre ae::AgentBody
 #include "common/config.h"  // pre ae::config::get
@@ -20,14 +27,10 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
   m_interface.position.x = ceil( (rand() % x) - (x/2) );
   m_interface.position.y = ceil( (rand() % y) - (y/2) );
   m_interface.position.z = 0.1;
-  //TODO understand why with bigger Z, perspective is not top
-  //-> m_interface.position.z = 1;
 
   m_interface.color = {0.0f, 1.0f, 0.0f};
   // m_interface.value[0] = typ feromonu;
   // m_interface.value[1] = intenzita;
-
-
 
   m_interface.timestamp = ae::time::timestamp();
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
@@ -66,9 +69,14 @@ void FollowerAgent::process(ae::Environment &env)
   m_interface.timestamp = ae::time::timestamp();
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
 
+  //Mouse testing
+  //MglutPassiveMotionFunc( My_mouse_routine );
+  //LOG(INFO) << "Mouse " << mouse_x << "/" << mouse_y << " .";
+
+  //
+
   //finalne premiestnit do statickej = sucastou triedy
   const uint16_t target_type = ae::config::get["agent_list"]["follower"]["interface_type"];
-
 
   //cyklus na prejdenie vsetkych agentov co su v systeme
   //m_interface je premenna typu sAgentInterface

@@ -30,6 +30,19 @@ const std::string VisualisationAgent::kDefaultWindowName = "robot visualisation"
 
 using namespace ae;
 
+class VisualisationAgent *g_visualisation_agent_instance = nullptr;
+int g_time_ms = 20;
+void timer_callback(int dummy)
+{
+  g_visualisation_agent_instance->rendering();
+  //if running zavola za g_time_ms funkciu rendering
+  if (g_visualisation_agent_instance->is_running()) glutTimerFunc(g_time_ms, timer_callback, 0);
+}
+
+void mouse_move_callback(int x, int y)
+{
+  g_visualisation_agent_instance->mouse_move_handler(x, y);
+}
 
 VisualisationAgent::VisualisationAgent(const nlohmann::json &parameters) :
   m_fullscreen(kDefaultFullscreen),
@@ -50,6 +63,9 @@ VisualisationAgent::VisualisationAgent(const nlohmann::json &parameters) :
   m_grid(),
   m_border()
 {
+  //backdoor alebo prasacke zviditelnenie
+  if (g_visualisation_agent_instance == nullptr) g_visualisation_agent_instance = this;
+
   // initialize agent interface
   m_interface.type = this->assigned_type();
   m_interface.body = AgentBody::get_body_type(m_interface.type);
@@ -195,29 +211,18 @@ void VisualisationAgent::glut_thread_callback()
     glutFullScreen();
   }
 
-  auto frame_period = ae::time::microseconds((int)(1.0 / (double)m_framerate * 1000000.0));
-  auto next_frame = ae::time::clock::now();
+
 
   if (m_draw_grid)
   {
     make_grid();
   }
 
-  m_running = true;
-  while (m_running)
-  {
-    draw_scene();
+  glutPassiveMotionFunc(mouse_move_callback);
 
-    next_frame += frame_period;
-    if (next_frame > ae::time::clock::now())
-    {
-      ae::time::sleep_until(next_frame);
-    }
-    else
-    {
-      next_frame = ae::time::clock::now();
-    }
-  }
+  m_running = true;
+  glutTimerFunc(20, timer_callback, 0);
+  glutMainLoop();
 
   if (m_window_handle != -1)
   {
@@ -225,6 +230,24 @@ void VisualisationAgent::glut_thread_callback()
   }
 }
 
+void VisualisationAgent::rendering()
+{
+//  auto frame_period = ae::time::microseconds((int)(1.0 / (double)m_framerate * 1000000.0));
+//  auto next_frame = ae::time::clock::now();
+
+  draw_scene();
+
+/*  next_frame += frame_period;
+  if (next_frame > ae::time::clock::now())
+  {
+    ae::time::sleep_until(next_frame);
+  }
+  else
+  {
+    next_frame = ae::time::clock::now();
+  }
+*/
+}
 
 void VisualisationAgent::draw_scene()
 {
@@ -421,4 +444,12 @@ void VisualisationAgent::make_border(const float width)
   m_border.emplace_back(-w, h, d);
   m_border.emplace_back(-wi, -hi, d);
   m_border.emplace_back(-w, -h, d);
+}
+
+void VisualisationAgent::mouse_move_handler(int x, int y)
+{
+  std::cout << x <<" "<< y << std::endl;
+  m_interface.position.x = x;
+  m_interface.position.y = y;
+  m_interface.position.z = 0.0f;
 }

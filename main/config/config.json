@@ -10,7 +10,13 @@
     "r": 0.2,
     "g": 0.7,
     "b": 0.3,
-    "active_log_on": false
+    "active_log_on": false,
+    "out_of_grid_log_on": "todo"
+  },
+  "touch":
+  {
+    "square_size_pix": 36,
+    "rise_speed": 0.2
   },
   "robot_tracking":
   {

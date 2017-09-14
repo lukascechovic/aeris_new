@@ -12,6 +12,11 @@
 #include "common/agent_body.h"
 #include "common/config.h"
 
+struct sTouchAgentPosition
+{
+  int64_t x;
+  int64_t y;
+};
 
 class VisualisationAgent : public ae::Agent
 {
@@ -94,9 +99,11 @@ class VisualisationAgent : public ae::Agent
     void make_border(const float width);
 
     public:
+
       void rendering();
-      void mouse_move_handler(int x, int y);
+      void mouse_motion_handler(int x, int y);
       void touch_motion_handler(int x, int y);
+      sTouchAgentPosition pixels_to_agent_position(int x, int y);
 };
 
 

@@ -32,6 +32,9 @@ using namespace ae;
 
 class VisualisationAgent *g_visualisation_agent_instance = nullptr;
 int g_time_ms = 20;
+//TODO directly read params of this plugin
+//TODO mean skip agent_group_list and follower params
+//int g_time_ms = ae::config::get["agent_group_list"]["follower"]["spawn"]["params"]["framerate"];
 void timer_callback(int dummy)
 {
   g_visualisation_agent_instance->rendering();
@@ -39,9 +42,9 @@ void timer_callback(int dummy)
   if (g_visualisation_agent_instance->is_running()) glutTimerFunc(g_time_ms, timer_callback, 0);
 }
 
-void mouse_move_callback(int x, int y)
+void mouse_motion_callback(int x, int y)
 {
-  g_visualisation_agent_instance->mouse_move_handler(x, y);
+  g_visualisation_agent_instance->mouse_motion_handler(x, y);
 }
 
 void touch_motion_callback(int x, int y)
@@ -224,7 +227,7 @@ void VisualisationAgent::glut_thread_callback()
   }
 
   //passive mouse motion
-  //glutPassiveMotionFunc(mouse_move_callback);
+  //glutPassiveMotionFunc(mouse_motion_callback);
   //active touch move mouse motion
   //usable for touchscreen input
   glutMotionFunc(touch_motion_callback);
@@ -455,7 +458,7 @@ void VisualisationAgent::make_border(const float width)
   m_border.emplace_back(-w, -h, d);
 }
 
-void VisualisationAgent::mouse_move_handler(int x, int y)
+void VisualisationAgent::mouse_motion_handler(int x, int y)
 {
   std::cout << x <<" "<< y << std::endl;
   m_interface.position.x = x;
@@ -465,8 +468,51 @@ void VisualisationAgent::mouse_move_handler(int x, int y)
 
 void VisualisationAgent::touch_motion_handler(int x, int y)
 {
-  std::cout << x <<" "<< y << std::endl;
-  m_interface.position.x = x;
-  m_interface.position.y = y;
+  //std::cout << x <<" "<< y << std::endl;
+
+  sTouchAgentPosition value;
+  value = pixels_to_agent_position(x, y);
+
+  //m_interface.position.x = x;
+  //m_interface.position.y = y;
+  std::cout << value.x <<" "<< value.y << " " << x <<" "<< y <<std::endl;
+  m_interface.position.x = value.x;
+  m_interface.position.y = value.y;
   m_interface.position.z = 0.0f;
+}
+
+sTouchAgentPosition VisualisationAgent::pixels_to_agent_position (int x, int y)
+{
+  sTouchAgentPosition value;
+  //TODO read resolution from json
+  //TODO constants from json
+  //TODO xrandr
+  int screen_res_x = 1920;
+  int screen_res_y = 1080;
+  int x_size_mm = 604;
+  int y_size_mm = 342;
+  int zero_x = (screen_res_x/2)-1;
+  int zero_y = (screen_res_y/2)-1;
+  int square_size_mm = 10;
+  int square_size_pix = ae::config::get["touch"]["square_size_pix"];
+  //int square_size_pix = round((screen_res_x*square_size_mm)/x_size_mm));
+/*
+  int x_grid_size;
+  int y_grid_size;
+
+  div_t divresult;
+  divresult = div (screen_res_x, square_size_pix);
+  x_grid_size = divresult.quot;
+  divresult = div (screen_res_y, square_size_pix);
+  y_grid_size = divresult.quot;
+*/
+  div_t divresult;
+
+  divresult = div ((x - zero_x), square_size_pix);
+  value.x = divresult.quot;
+
+  divresult = div ((y - zero_y), square_size_pix);
+  value.y = -divresult.quot;
+
+  return value;
 }

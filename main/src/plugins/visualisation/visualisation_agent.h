@@ -92,10 +92,11 @@ class VisualisationAgent : public ae::Agent
 
     void make_grid(); /* TODO */
     void make_border(const float width);
-    
+
     public:
       void rendering();
       void mouse_move_handler(int x, int y);
+      void touch_motion_handler(int x, int y);
 };
 
 

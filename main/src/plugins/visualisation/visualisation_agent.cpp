@@ -44,6 +44,11 @@ void mouse_move_callback(int x, int y)
   g_visualisation_agent_instance->mouse_move_handler(x, y);
 }
 
+void touch_motion_callback(int x, int y)
+{
+  g_visualisation_agent_instance->touch_motion_handler(x, y);
+}
+
 VisualisationAgent::VisualisationAgent(const nlohmann::json &parameters) :
   m_fullscreen(kDefaultFullscreen),
   m_draw_grid(kDefaultDrawGrid),
@@ -218,7 +223,11 @@ void VisualisationAgent::glut_thread_callback()
     make_grid();
   }
 
-  glutPassiveMotionFunc(mouse_move_callback);
+  //passive mouse motion
+  //glutPassiveMotionFunc(mouse_move_callback);
+  //active touch move mouse motion
+  //usable for touchscreen input
+  glutMotionFunc(touch_motion_callback);
 
   m_running = true;
   glutTimerFunc(20, timer_callback, 0);
@@ -447,6 +456,14 @@ void VisualisationAgent::make_border(const float width)
 }
 
 void VisualisationAgent::mouse_move_handler(int x, int y)
+{
+  std::cout << x <<" "<< y << std::endl;
+  m_interface.position.x = x;
+  m_interface.position.y = y;
+  m_interface.position.z = 0.0f;
+}
+
+void VisualisationAgent::touch_motion_handler(int x, int y)
 {
   std::cout << x <<" "<< y << std::endl;
   m_interface.position.x = x;

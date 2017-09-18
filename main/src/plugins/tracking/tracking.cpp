@@ -83,7 +83,7 @@ void TrackingAgent::process(ae::Environment &env)
 
   //finalne premiestnit do statickej = sucastou triedy
   const uint16_t target_type = ae::config::get["agent_list"]["real_robot_agent"]["interface_type"];
-  const uint16_t target_type_2 = ae::config::get["agent_list"]["visualisation"]["interface_type"];
+  const uint16_t target_type_2 = ae::config::get["agent_list"]["follower"]["interface_type"];
   //LOG(INFO) << "Target type: " << target_type;
   //cyklus na prejdenie vsetkych agentov co su v systeme
   //m_interface je premenna typu sAgentInterface

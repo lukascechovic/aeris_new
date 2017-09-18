@@ -1,3 +1,8 @@
+/*
+This plugin had to be original pheromones handling agent
+but finally it ended up inside tracking plugin
+ */
+
 #include "common/agent.h"  // pre ae::Agent, ae::Environment
 #include "common/agent_body.h"  // pre ae::AgentBody
 #include "common/config.h"  // pre ae::config::get

@@ -28,9 +28,7 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
   m_interface.position.y = ceil( (rand() % y) - (y/2) );
   m_interface.position.z = 0.1;
 
-  m_interface.color = {0.0f, 1.0f, 0.0f};
-  // m_interface.value[0] = typ feromonu;
-  // m_interface.value[1] = intenzita;
+  m_interface.color = {0.9f, 0.8f, 0.32f};
 
   m_interface.timestamp = ae::time::timestamp();
   m_interface.expires = ae::time::future_timestamp(ae::time::seconds(1));
@@ -40,6 +38,9 @@ FollowerAgent::FollowerAgent(const nlohmann::json &parameters) :
 void FollowerAgent::process(ae::Environment &env)
 {
   (void)env;
+
+  //LOG(INFO) << "FollowerAgent body = " << m_interface.body;
+
 
   int x = ae::config::get["pheromone"]["pheromone_grid_x"];
   int y = ae::config::get["pheromone"]["pheromone_grid_y"];

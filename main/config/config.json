@@ -1,15 +1,29 @@
 {
+  "object01_track_agent":
+  {
+    "fade_speed": 0.998,
+    "rise_speed": 0.2,
+    "rise_from": 0.6,
+    "object01_grid_x": 48,
+    "object01_grid_y": 26,
+    "threshold": 0.11,
+    "r": 1.0,
+    "g": 1.0,
+    "b": 1.0,
+    "active_log_on": false,
+    "out_of_grid_log_on": "todo"
+  },
   "pheromone":
   {
-    "fade_speed": 0.98,
+    "fade_speed": 0.99,
     "rise_speed": 0.2,
     "rise_from": 0.6,
     "pheromone_grid_x": 48,
     "pheromone_grid_y": 26,
     "threshold": 0.11,
-    "r": 0.2,
-    "g": 0.7,
-    "b": 0.3,
+    "r": 0.28,
+    "g": 0.22,
+    "b": 0.028,
     "active_log_on": false,
     "out_of_grid_log_on": "todo"
   },
@@ -119,6 +133,18 @@
       "interface_type": 8,
       "body": "null"
     }
+    ,
+    "object01_track_agent":
+    {
+      "interface_type": 9,
+      "body": "null"
+    }
+    ,
+    "object01_agent":
+    {
+      "interface_type": 10,
+      "body": "plane_1cm"
+    }
   },
   "body_list":
   {
@@ -149,6 +175,66 @@
   },
   "agent_group_list":
   {
+    "visualisation":
+      {
+      "dt": 10,
+      "njobs": 2,
+      "spawn":
+      [
+        {
+          "count": 1,
+          "plugin": "visualisation",
+          "params":
+          {
+            "fullscreen": true,
+            "draw_grid": true,
+            "resolution": [1920, 1080],
+            "framerate": 30,
+            "border_width": 2.0
+          }
+        }
+      ]
+      },
+      "pheromone":
+        {
+        "dt": 100,
+        "njobs": 2,
+        "spawn":
+        [
+          {
+            "count": 1,
+            "plugin": "tracking",
+            "params":
+            {
+
+            }
+          },
+          {
+            "count": 10,
+            "plugin": "follower",
+            "params":
+            {
+
+            }
+          }
+        ]
+        },
+        "wall":
+          {
+          "dt": 10,
+          "njobs": 2,
+          "spawn":
+          [
+            {
+              "count": 1,
+              "plugin": "object01_track_agent",
+              "params":
+              {
+
+              }
+            }
+          ]
+          },
     "follower":
       {
       "dt": 100,
@@ -168,7 +254,7 @@
           }
         },
         {
-          "count": 10,
+          "count": 1,
           "plugin": "follower",
           "params":
           {
@@ -187,6 +273,15 @@
         {
           "count": 0,
           "plugin": "pheromone",
+          "params":
+          {
+
+          }
+        }
+        ,
+        {
+          "count": 1,
+          "plugin": "object01_track_agent",
           "params":
           {
 

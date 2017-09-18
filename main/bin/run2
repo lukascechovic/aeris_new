@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+pushd "$(dirname $0)" > /dev/null
+pushd .. > /dev/null
+export MAIN_ROOT_DIR="$(pwd)"
+popd > /dev/null
+popd > /dev/null
+source ${MAIN_ROOT_DIR}/bin/bash-env.sh
+
+ARGS=""
+
+clean_logs
+
+spawn server $ARGS
+sleep 1s
+check_alive
+
+#spawn agent-group  --name=test1
+#sleep 1s
+#spawn agent-group  --name=test2
+#sleep 1s
+spawn agent-group $ARGS --name=visualisation --playground=dell_touch
+sleep 1s
+spawn agent-group $ARGS --name=pheromone --playground=dell_touch
+sleep 1s
+spawn agent-group $ARGS --name=wall --playground=dell_touch
+
+#spawn camera
+stop
+
+#sleep 1s
+#print_performance

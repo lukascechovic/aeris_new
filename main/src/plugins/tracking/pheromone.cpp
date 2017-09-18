@@ -67,7 +67,7 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
   m_interface.color.g *= rise_from;
   m_interface.color.b *= rise_from;
 
-  m_interface.type = 22;
+  m_interface.type = 2;
   // m_interface.value[0] = typ feromonu;
   // m_interface.value[1] = intenzita;
   m_interface.timestamp = ae::time::timestamp();
@@ -93,6 +93,9 @@ PheromoneAgent::PheromoneAgent(ae::sAgentPosition position):
 void PheromoneAgent::process(ae::Environment &env)
 {
   (void)env;
+
+  //json body_list interface_type number
+  //m_interface.body = 2;
 
   g_pheromone_grid[m_grid_position.x][m_grid_position.y].m_parameters.id = m_interface.id;
   //LOG(INFO) << "PheromoneAgent: Process, ID = " << m_interface.id;

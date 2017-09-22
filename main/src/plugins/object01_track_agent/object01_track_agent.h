@@ -33,6 +33,10 @@ class Object01TrackAgent : public ae::Agent
 
     void decrease_object01_intensitys();
 
+    void clear_grid_object01();
+
+    void clear_object01_intensity(ae::sAgentPosition position);
+
     void process(ae::Environment &env);
 
     void process_object01s(ae::Environment &env);

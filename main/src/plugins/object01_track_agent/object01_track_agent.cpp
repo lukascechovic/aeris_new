@@ -21,6 +21,10 @@ Object01TrackAgent::Object01TrackAgent(const nlohmann::json &parameters) :
 
   m_interface.color = {0.0f, 1.0f, 1.0f};
 
+  //handling clear touch on/off information
+  //on/off flag
+  m_interface.value[0] = 0;
+
   init_object01_grid();
   // m_interface.value[0] = typ feromonu;
   // m_interface.value[1] = intenzita;
@@ -98,13 +102,44 @@ void Object01TrackAgent::process(ae::Environment &env)
     {
       //LOG(INFO) << "FollowerAgent Position Read: " << agent.position.x << " " <<agent.position.y;
       //increase_object01_intensity on position of agent to track
-      increase_object01_intensity(agent.position);
+      //clear object intensity if clearing is on
+      if (m_interface.value[0] == 1)
+      {
+        clear_object01_intensity(agent.position);
+      }
+      else
+      {
+        increase_object01_intensity(agent.position);
+      }
+
+      //clear grid if touch on position [-25,-13]
+      //left down corner
+      if (agent.position.x <= -25 && agent.position.y <= -13)
+      {
+        clear_grid_object01();
+        m_interface.value[0] = 0;
+      }
+
+      //clearing touch on
+      //information is handled through m_interface.value[0]
+      //left up corner
+      if (agent.position.x <= -25 && agent.position.y >= 13)
+      {
+        m_interface.value[0] = 1;
+      }
+      //clearing touch off
+      //right up corner
+      if (agent.position.x >= 25 && agent.position.y >= 13)
+      {
+        m_interface.value[0] = 0;
+      }
     }
   }
   //decrease_object01_intensitys on all grid positions
   decrease_object01_intensitys();
   //kill and create Object01Agent's base on intensity in grid matrix
   process_object01s(env);
+
 
 }
 
@@ -185,7 +220,26 @@ void Object01TrackAgent::increase_object01_intensity(ae::sAgentPosition position
   }
   else
   {
-    LOG(INFO) << "TrackedAgent out of range of GRID";
+    if (ae::config::get["object01_track_agent"]["out_of_grid_log_on"] == true)
+      LOG(INFO) << "TrackedAgent out of range of GRID";
+  }
+}
+
+void Object01TrackAgent::clear_object01_intensity(ae::sAgentPosition position)
+{
+  sObject01GridPosition value;
+  value = agent_to_grid_position(position);
+  //TODO test if value is in range of grid
+  int grid_x_size = ae::config::get["object01_track_agent"]["object01_grid_x"];
+  int grid_y_size = ae::config::get["object01_track_agent"]["object01_grid_y"];
+  if (((value.x>=0)&&(value.x<grid_x_size))&&((value.y>=0)&&(value.y<grid_y_size)))
+  {
+      g_object01_grid[value.x][value.y].m_parameters.intensity = 0;
+  }
+  else
+  {
+    if (ae::config::get["object01_track_agent"]["out_of_grid_log_on"] == true)
+      LOG(INFO) << "TrackedAgent out of range of GRID";
   }
 }
 
@@ -203,6 +257,17 @@ void Object01TrackAgent::decrease_object01_intensitys()
       {
         g_object01_grid[i][j].m_parameters.intensity = 0.0;
       }
+    }
+  }
+}
+
+void Object01TrackAgent::clear_grid_object01()
+{
+  for (size_t i = 0; i < g_object01_grid.size(); i++)
+  {
+    for (size_t j = 0; j < g_object01_grid[i].size(); j++)
+    {
+        g_object01_grid[i][j].m_parameters.intensity = 0.0;
     }
   }
 }

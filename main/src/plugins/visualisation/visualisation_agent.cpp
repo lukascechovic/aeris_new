@@ -475,7 +475,10 @@ void VisualisationAgent::touch_motion_handler(int x, int y)
 
   //m_interface.position.x = x;
   //m_interface.position.y = y;
-  //std::cout << value.x <<" "<< value.y << " " << x <<" "<< y <<std::endl;
+  if (ae::config::get["debuging"]["visualisation_position"] == true)
+  {
+    std::cout << value.x <<" "<< value.y << " " << x <<" "<< y <<std::endl;
+  }
   m_interface.position.x = value.x;
   m_interface.position.y = value.y;
   m_interface.position.z = 0.0f;
